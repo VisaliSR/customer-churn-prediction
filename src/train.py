@@ -1,14 +1,23 @@
 import pandas as pd
+import joblib
 from preprocess import clean_data
+from config import (
+    TEST_SIZE,
+    RANDOM_STATE,
+    NUMERIC_COLUMNS,
+    BINARY_COLUMNS,
+    ONE_HOT_COLUMNS,
+    MAPPINGS
+)
 from transformers import BinaryMapper
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-# from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix,classification_report
-
 
 
 df=pd.read_csv("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
@@ -25,9 +34,9 @@ y=y.map({"Yes":1,"No":0})
 #Splitting train and test data 
 X_train,X_test,y_train,y_test=train_test_split(
     X,y,
-    test_size=0.25,
+    test_size=TEST_SIZE,
     stratify=y,
-    random_state=42
+    random_state=RANDOM_STATE
 )
 # print(X_train.shape)
 # print(X_test.shape)
@@ -36,74 +45,22 @@ X_train,X_test,y_train,y_test=train_test_split(
 
 
 
-#Dividing columns
-numeric_columns = [
-    "tenure",
-    "MonthlyCharges",
-    "TotalCharges",
-    "SeniorCitizen"
-]
-
-binary_columns = [
-    "gender",
-    "Partner",
-    "Dependents",
-    "PhoneService",
-    "PaperlessBilling"
-]
-
-one_hot_columns = [
-    "MultipleLines",
-    "InternetService",
-    "OnlineSecurity",
-    "OnlineBackup",
-    "DeviceProtection",
-    "TechSupport",
-    "StreamingTV",
-    "StreamingMovies",
-    "Contract",
-    "PaymentMethod"
-]
-
-
-#Mappings for binary mapping
-mappings = {
-    "gender": {
-        "Male": 1,
-        "Female": 0
-    },
-    "Partner": {
-        "Yes": 1,
-        "No": 0
-    },
-    "Dependents": {
-        "Yes": 1,
-        "No": 0
-    },
-    "PhoneService": {
-        "Yes": 1,
-        "No": 0
-    },
-    "PaperlessBilling": {
-        "Yes": 1,
-        "No": 0
-    }
-}
+     
 preprocessor= ColumnTransformer(
     transformers=[
         ("numeric",
          StandardScaler(),
-         numeric_columns
+         NUMERIC_COLUMNS
          ),
          (
             "binary",
-            BinaryMapper(mappings),
-            binary_columns
+            BinaryMapper(MAPPINGS),
+            BINARY_COLUMNS
          ),
          (
              "categorical",
              OneHotEncoder(handle_unknown="ignore"),
-             one_hot_columns
+             ONE_HOT_COLUMNS
          )
     ],remainder='passthrough'  # Keep remaining columns untouched
 )
@@ -111,11 +68,14 @@ preprocessor= ColumnTransformer(
 pipeline=Pipeline(
     [
         ("preprocessor",preprocessor),
-        ("model",DecisionTreeClassifier(max_depth=5,random_state=42))
+        ("model",LogisticRegression(class_weight="balanced",random_state=RANDOM_STATE))
     ]
 )
 pipeline.fit(X_train,y_train)
+
+joblib.dump(pipeline, "models/balanced_logistic_regression.pkl")
 y_pred=pipeline.predict(X_test)
+
 
 matrix=confusion_matrix(y_test,y_pred)
 print(matrix)
