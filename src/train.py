@@ -5,7 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix,classification_report
 
 
@@ -110,7 +111,7 @@ preprocessor= ColumnTransformer(
 pipeline=Pipeline(
     [
         ("preprocessor",preprocessor),
-        ("model",LogisticRegression(class_weight="balanced", random_state=42))
+        ("model",DecisionTreeClassifier(max_depth=5,random_state=42))
     ]
 )
 pipeline.fit(X_train,y_train)
