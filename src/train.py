@@ -10,7 +10,7 @@ from sklearn.metrics import confusion_matrix,classification_report
 
 
 
-df=pd.read_csv("customer-churn-prediction/data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+df=pd.read_csv("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
 df=clean_data(df)
 
@@ -110,7 +110,7 @@ preprocessor= ColumnTransformer(
 pipeline=Pipeline(
     [
         ("preprocessor",preprocessor),
-        ("model",LogisticRegression())
+        ("model",LogisticRegression(class_weight="balanced", random_state=42))
     ]
 )
 pipeline.fit(X_train,y_train)
