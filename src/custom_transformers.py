@@ -12,3 +12,5 @@ class BinaryMapper(BaseEstimator,TransformerMixin):
         for key,value in self.mappings.items():
             copy_X[key]=copy_X[key].map(value)
         return copy_X
+    def get_feature_names_out(self,input_features=None):
+        return input_features

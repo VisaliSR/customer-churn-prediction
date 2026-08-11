@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
-from preprocess import clean_data
-from config import (
+from src.preprocess import clean_data
+from src.config import (
     TEST_SIZE,
     RANDOM_STATE,
     NUMERIC_COLUMNS,
@@ -9,7 +9,7 @@ from config import (
     ONE_HOT_COLUMNS,
     MAPPINGS
 )
-from custom_transformers import BinaryMapper
+from src.custom_transformers import BinaryMapper
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.compose import ColumnTransformer

@@ -1,6 +1,7 @@
 import joblib
 import pandas as pd
 
+
 pipeline=joblib.load("models/balanced_logistic_regression.pkl")
 
 new_customer = pd.DataFrame([
