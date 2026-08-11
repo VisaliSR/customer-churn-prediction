@@ -9,7 +9,7 @@ from config import (
     ONE_HOT_COLUMNS,
     MAPPINGS
 )
-from transformers import BinaryMapper
+from custom_transformers import BinaryMapper
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.compose import ColumnTransformer
