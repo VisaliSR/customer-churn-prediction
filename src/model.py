@@ -54,3 +54,25 @@ def create_pipeline():
     )
 
     return pipeline
+def create_preprocessor():
+    preprocessor = ColumnTransformer(
+        transformers=[
+            (
+                "numeric",
+                StandardScaler(),
+                NUMERIC_COLUMNS
+            ),
+            (
+                "binary",
+                BinaryMapper(MAPPINGS),
+                BINARY_COLUMNS
+            ),
+            (
+                "categorical",
+                OneHotEncoder(handle_unknown="ignore"),
+                ONE_HOT_COLUMNS
+            )
+        ],
+        remainder="passthrough"
+    )
+    return preprocessor
