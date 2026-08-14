@@ -166,3 +166,6 @@ if st.button("Predict"):
     st.subheader("Main Risk Factors")
     for reason in reasons:
         st.write("*",reason)
+st.caption(
+    "Model: Logistic Regression | Dataset: Telco Customer Churn"
+)
