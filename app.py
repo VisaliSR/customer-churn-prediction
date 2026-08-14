@@ -2,6 +2,17 @@ import streamlit as st
 import joblib
 import pandas as pd
 
+def explain_risk(customer):
+    reasons=[]
+    if customer["tenure"].iloc[0]<12:
+        reasons.append("Short customer tenure")
+    if customer["Contract"].iloc[0]=="Month-to-month":
+        reasons.append("Month-to-month contract")
+    if customer["InternetService"].iloc[0]=="Fiber optic":
+        reasons.append("Fiber optic Internet service")
+    if customer["TechSupport"].iloc[0]=="No":
+        reasons.append("No tech support")
+    return reasons
 st.title("Customer Churn Prediction")
 model=joblib.load("models/best_model.pkl")
 
@@ -110,18 +121,25 @@ customer = pd.DataFrame({
     "MonthlyCharges": [monthly_charges],
     "TotalCharges": [total_charges]
 })
-st.write("Customer data:")
-st.dataframe(customer)
+with st.expander("View Customer Data"):
+    st.dataframe(customer)
+
 
 if st.button("Predict"):
     st.header("Prediction")
+    reasons=explain_risk(customer)
     prediction=model.predict(customer)
     probability=float(model.predict_proba(customer)[0][1])
-    st.metric(
-    "Churn Probability",
-    f"{probability:.1%}"
-)
 
+    st.subheader("Customer Summary")
+    st.write(f"Tenure: {tenure} months")
+    st.write(f"Contract: {contract}")
+    st.write(f"Internet Service: {internet_service}")
+    st.write(f"Monthly Charges: ${monthly_charges:.2f}")
+
+    st.metric("Churn Probability",f"{probability:.1%}")
+    st.progress(probability)
+    st.write( "Predicted Class:", "Churn" if prediction[0] == 1 else "No Churn")
     if probability >= 0.7:
         st.error(
             f"High Churn Risk"
@@ -145,3 +163,6 @@ if st.button("Predict"):
         st.write(
         "This customer currently appears relatively stable."
     )
+    st.subheader("Main Risk Factors")
+    for reason in reasons:
+        st.write("*",reason)
