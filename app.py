@@ -3,15 +3,23 @@ import joblib
 import pandas as pd
 
 def explain_risk(customer):
-    reasons=[]
-    if customer["tenure"].iloc[0]<12:
+    reasons = []
+
+    if customer["tenure"].iloc[0] < 12:
         reasons.append("Short customer tenure")
-    if customer["Contract"].iloc[0]=="Month-to-month":
+
+    if customer["Contract"].iloc[0] == "Month-to-month":
         reasons.append("Month-to-month contract")
-    if customer["InternetService"].iloc[0]=="Fiber optic":
-        reasons.append("Fiber optic Internet service")
-    if customer["TechSupport"].iloc[0]=="No":
+
+    if (
+        customer["InternetService"].iloc[0] == "Fiber optic"
+        and customer["TechSupport"].iloc[0] == "No"
+    ):
+        reasons.append("Fiber optic service without Tech Support")
+
+    if customer["TechSupport"].iloc[0] == "No":
         reasons.append("No tech support")
+
     return reasons
 st.title("Customer Churn Prediction")
 model=joblib.load("models/best_model.pkl")
