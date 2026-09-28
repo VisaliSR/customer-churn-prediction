@@ -173,7 +173,7 @@ customer-churn-prediction/
     ├── preprocess.py
     └── shap_analysis.py
 ```
-##Deployment
+## Deployment
 
 The Dockerized application is deployed using Render.
 
@@ -200,7 +200,7 @@ Possible future improvements include:
 - More advanced customer-level explanations
 - Experimentation with additional classification models
 
-##Author
+## Author
 Visali Rajkumar
 
 An end-to-end machine learning project built to learn and demonstrate the complete workflow from data analysis to deployment.
