@@ -157,21 +157,22 @@ http://localhost:10000
 | Git & GitHub	| Version control |
 
 ## Project Structure
+
+```text
 customer-churn-prediction/
 │
 ├── app.py
 ├── Dockerfile
 ├── requirements.txt
+├── README.md
 │
 ├── models/
 │   └── best_model.pkl
 │
-├── src/
-│   ├── preprocess.py
-│   └── shap_analysis.py
-│
-└── README.md
-
+└── src/
+    ├── preprocess.py
+    └── shap_analysis.py
+```
 ##Deployment
 
 The Dockerized application is deployed using Render.
